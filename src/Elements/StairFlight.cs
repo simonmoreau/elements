@@ -94,7 +94,12 @@ namespace Elements
         /// <param name="flightWidth">The overall width of the stair flight.</param>
         /// <param name="material">The stair flight's material.</param>
         /// <param name="nosingLength">The horizontal distance from the front of the tread to the riser underneath. It is the overhang of the tread.</param>
-        public StairFlight(StairFlightType stairFlightType, Line walkingLine, double riserHeight, double treadLength, double waistThickness, double flightWidth, Material material = null, double nosingLength = 0)
+        /// <param name="transform">The transform of the stair flight.
+        /// This transform will be concatenated to the transform created to place the stair along its walking line.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the riser is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the lenght of the tread is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the waist is less than or equal to zero.</exception>
+        public StairFlight(StairFlightType stairFlightType, Line walkingLine, double riserHeight, double treadLength, double waistThickness, double flightWidth, Material material = null, double nosingLength = 0, Transform transform = null)
         {
             if (riserHeight <= 0.0)
             {
@@ -122,21 +127,25 @@ namespace Elements
             this.NosingLength = nosingLength;
             this.Material = material == null ? BuiltInMaterials.Default : material;
 
-            CreateStraightStairFlight();
-        }
+            // Construct a transform whose X axis is the walking line of the stair.
+            // The stair is described as if it's lying flat in the XY plane of that Transform.
+            Vector3 d = WalkingLine.Direction();
+            Vector3 z = d.Cross(Vector3.ZAxis);
+            Transform stairFlightTransform = new Transform(WalkingLine.Start, d, z);
+            this.Transform = stairFlightTransform;
 
-        private void CreateStraightStairFlight()
-        {
-            Vector3 basepoint = this.WalkingLine.Start;
-            Vector3 direction = this.WalkingLine.Direction();
-            Transform sectionTransform = new Transform(basepoint, direction, Vector3.ZAxis);
+            if (transform != null)
+            {
+                stairFlightTransform.Concatenate(transform);
+            }
 
-            this.Profile = sectionTransform.OfProfile(new Profile(StraightStairFlightSection()));
+            this.Profile = StraightStairFlightSection();
             this.ExtrudeDepth = this.FlightWidth;
-            this.ExtrudeDirection = Vector3.ZAxis.Cross(direction);
+            this.ExtrudeDirection = Vector3.ZAxis;
+
         }
 
-        private Polygon StraightStairFlightSection()
+        private Profile StraightStairFlightSection()
         {
             List<Vector3> flightPoints = new List<Vector3>();
 
@@ -165,7 +174,10 @@ namespace Elements
             Vector3 horizontalThickness = (runThickness.Length() / Math.Sin(alpha)) * Vector3.XAxis;
             flightPoints.Add(horizontalThickness);
 
-            return new Polygon(flightPoints.ToArray()).Reversed(); ;
+            Polygon sectionPolygon = new Polygon(flightPoints.ToArray());
+            Profile sectionProfile = new Profile(sectionPolygon);
+
+            return sectionProfile;
         }
 
     }
