@@ -39,7 +39,7 @@ namespace Elements
         public double NosingLength { get; }
 
         /// <summary>
-        /// Minimum thickness of the stair flight, measured perpendicular to the slope of the flight to the inner corner of riser and tread. It is a pre-calculated value, in case of inconsistencies, the value derived from the shape representation shall take precedence.
+        /// Minimum thickness of the stair flight, measured perpendicular to the slope of the flight to the inner corner of riser and tread.
         /// </summary>
         public double WaistThickness { get; }
 
@@ -90,12 +90,27 @@ namespace Elements
         /// <param name="walkingLine">The walking line is represented by a line directed into the upward direction.</param>
         /// <param name="riserHeight">The vertical distance from tread to tread. The riser height is supposed to be equal for all steps of a stair or stair flight.</param>
         /// <param name="treadLength">The horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair or stair flight at the walking line.</param>
-        /// <param name="waistThickness">The minimum thickness of the stair flight, measured perpendicular to the slope of the flight to the inner corner of riser and tread. It is a pre-calculated value, in case of inconsistencies, the value derived from the shape representation shall take precedence.</param>
+        /// <param name="waistThickness">The minimum thickness of the stair flight, measured perpendicular to the slope of the flight to the inner corner of riser and tread.</param>
         /// <param name="flightWidth">The overall width of the stair flight.</param>
         /// <param name="material">The stair flight's material.</param>
         /// <param name="nosingLength">The horizontal distance from the front of the tread to the riser underneath. It is the overhang of the tread.</param>
         public StairFlight(StairFlightType stairFlightType, Line walkingLine, double riserHeight, double treadLength, double waistThickness, double flightWidth, Material material = null, double nosingLength = 0)
         {
+            if (riserHeight <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stairflight could not be created. The height of the riser provided, {riserHeight}, must be greater than 0.0.");
+            }
+
+            if (treadLength <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stairflight could not be created. The lenght of the tread provided, {treadLength}, must be greater than 0.0.");
+            }
+
+            if (waistThickness <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stairflight could not be created. The thickness of the waist provided, {treadLength}, must be greater than 0.0.");
+            }
+
             this.StairFlightType = stairFlightType;
             this.WalkingLine = walkingLine;
             this.TreadLength = treadLength;
