@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Elements.Tests
 {
-    public class StairTests : ModelTest
+    public class StairFlightTests : ModelTest
     {
         [Fact]
         public void StairFlight()
@@ -16,7 +16,7 @@ namespace Elements.Tests
                 new Vector3(0, 0, 0),
                 new Vector3(0, 10, 0)
             );
-            var StairFlight1 = new StairFlight(StairFlightType.Straight, walkingLine, 0.2, 0.3, 0.15, 1);
+            var StairFlight1 = new StairFlight(walkingLine, 0.2, 0.3, 0.15, 1);
 
             var model = new Model();
 
@@ -36,7 +36,7 @@ namespace Elements.Tests
     new Vector3(0, 0, 0),
     new Vector3(0, 10, 0)
 );
-            Assert.Throws<ArgumentOutOfRangeException>(() => { var StairFlight1 = new StairFlight(StairFlightType.Straight, walkingLine, 0, 0.3, 0.15, 1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var StairFlight1 = new StairFlight(walkingLine, 0, 0.3, 0.15, 1); });
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Elements.Tests
     new Vector3(0, 0, 0),
     new Vector3(0, 10, 0)
 );
-            Assert.Throws<ArgumentOutOfRangeException>(() => { var StairFlight1 = new StairFlight(StairFlightType.Straight, walkingLine, 0.2, 0, 0.15, 1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var StairFlight1 = new StairFlight(walkingLine, 0.2, 0, 0.15, 1); });
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Elements.Tests
     new Vector3(0, 0, 0),
     new Vector3(0, 10, 0)
 );
-            Assert.Throws<ArgumentOutOfRangeException>(() => { var StairFlight1 = new StairFlight(StairFlightType.Straight, walkingLine, 0.2, 0.3, 0, 1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var StairFlight1 = new StairFlight(walkingLine, 0.2, 0.3, 0, 1); });
         }
 
     }

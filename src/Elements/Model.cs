@@ -108,7 +108,7 @@ namespace Elements
                 throw new ArgumentException("An Element with the same Id already exists in the Model.");
             }
 
-            if(element is IAggregateElements)
+            if (element is IAggregateElements)
             {
                 var agg = (IAggregateElements)element;
                 AddElements(agg.Elements);
@@ -260,7 +260,7 @@ namespace Elements
 
         private void GetRootLevelElementData(IElement element)
         {
-            if(element is IMaterial)
+            if (element is IMaterial)
             {
                 var mat = (IMaterial)element;
                 AddMaterial(mat.Material);
@@ -278,9 +278,9 @@ namespace Elements
             if (element is IHasOpenings)
             {
                 var ho = (IHasOpenings)element;
-                if(ho.Openings != null)
+                if (ho.Openings != null)
                 {
-                    foreach(var o in ho.Openings)
+                    foreach (var o in ho.Openings)
                     {
                         AddProfile(o.Profile);
                     }
@@ -293,7 +293,7 @@ namespace Elements
                 if (wtp.ElementType != null)
                 {
                     AddElementType(wtp.ElementType);
-                    foreach(var layer in wtp.ElementType.MaterialLayers)
+                    foreach (var layer in wtp.ElementType.MaterialLayers)
                     {
                         AddMaterial(layer.Material);
                     }
@@ -306,20 +306,30 @@ namespace Elements
                 if (ftp.ElementType != null)
                 {
                     AddElementType(ftp.ElementType);
-                    foreach(var layer in ftp.ElementType.MaterialLayers)
+                    foreach (var layer in ftp.ElementType.MaterialLayers)
                     {
                         AddMaterial(layer.Material);
                     }
                 }
             }
 
-            if(element is IElementType<StructuralFramingType>)
+            if (element is IElementType<StructuralFramingType>)
             {
                 var sft = (IElementType<StructuralFramingType>)element;
-                if(sft.ElementType != null)
+                if (sft.ElementType != null)
                 {
                     AddElementType(sft.ElementType);
                     AddProfile(sft.ElementType.Profile);
+                    AddMaterial(sft.ElementType.Material);
+                }
+            }
+
+            if (element is IElementType<StairType>)
+            {
+                var sft = (IElementType<StairType>)element;
+                if (sft.ElementType != null)
+                {
+                    AddElementType(sft.ElementType);
                     AddMaterial(sft.ElementType.Material);
                 }
             }

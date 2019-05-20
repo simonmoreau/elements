@@ -25,9 +25,9 @@ namespace Elements.Serialization.JSON
         /// </summary>
         public override bool CanWrite
         {
-            get{return false;}
+            get { return false; }
         }
-        
+
         /// <summary>
         /// Read json.
         /// </summary>
@@ -40,7 +40,7 @@ namespace Elements.Serialization.JSON
         {
             var obj = JObject.Load(reader);
             var typeName = (string)obj.GetValue("type");
-            switch(typeName)
+            switch (typeName)
             {
                 case "wallType":
                     return obj.ToObject<WallType>(serializer);
@@ -48,6 +48,8 @@ namespace Elements.Serialization.JSON
                     return obj.ToObject<FloorType>(serializer);
                 case "structuralFramingType":
                     return obj.ToObject<StructuralFramingType>(serializer);
+                case "stairType":
+                    return obj.ToObject<StairType>(serializer);
                 default:
                     throw new Exception($"The ElementType with type name, {typeName}, could not be deserialzed.");
             }

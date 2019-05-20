@@ -24,12 +24,12 @@ namespace Elements
         public int NumberOfTreads { get; }
 
         /// <summary>
-        /// Vertical distance from tread to tread. The riser height is supposed to be equal for all steps of a stair or stair flight.
+        /// Vertical distance from tread to tread. The riser height is supposed to be equal for all steps of the stair flight.
         /// </summary>
         public double RiserHeight { get; }
 
         /// <summary>
-        /// Horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair or stair flight at the walking line.
+        /// Horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair flight at the walking line.
         /// </summary>
         public double TreadLength { get; }
 
@@ -86,10 +86,9 @@ namespace Elements
         /// <summary>
         /// Create a stair flight based on the walkingLine.
         /// </summary>
-        /// <param name="stairFlightType">The type of the stair flight.</param>
         /// <param name="walkingLine">The walking line is represented by a line directed into the upward direction.</param>
-        /// <param name="riserHeight">The vertical distance from tread to tread. The riser height is supposed to be equal for all steps of a stair or stair flight.</param>
-        /// <param name="treadLength">The horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair or stair flight at the walking line.</param>
+        /// <param name="riserHeight">The vertical distance from tread to tread. The riser height is supposed to be equal for all steps of the stair flight.</param>
+        /// <param name="treadLength">The horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair flight at the walking line.</param>
         /// <param name="waistThickness">The minimum thickness of the stair flight, measured perpendicular to the slope of the flight to the inner corner of riser and tread.</param>
         /// <param name="flightWidth">The overall width of the stair flight.</param>
         /// <param name="material">The stair flight's material.</param>
@@ -99,7 +98,7 @@ namespace Elements
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the riser is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the lenght of the tread is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the waist is less than or equal to zero.</exception>
-        public StairFlight(StairFlightType stairFlightType, Line walkingLine, double riserHeight, double treadLength, double waistThickness, double flightWidth, Material material = null, double nosingLength = 0, Transform transform = null)
+        public StairFlight(Line walkingLine, double riserHeight, double treadLength, double waistThickness, double flightWidth, Material material = null, double nosingLength = 0, Transform transform = null)
         {
             if (riserHeight <= 0.0)
             {
@@ -116,7 +115,6 @@ namespace Elements
                 throw new ArgumentOutOfRangeException($"The stairflight could not be created. The thickness of the waist provided, {treadLength}, must be greater than 0.0.");
             }
 
-            this.StairFlightType = stairFlightType;
             this.WalkingLine = walkingLine;
             this.TreadLength = treadLength;
             this.NumberOfTreads = (int)Math.Floor(walkingLine.Length() / this.TreadLength);
@@ -174,7 +172,7 @@ namespace Elements
             Vector3 horizontalThickness = (runThickness.Length() / Math.Sin(alpha)) * Vector3.XAxis;
             stairFlightPoints.Add(horizontalThickness);
 
-            Polygon sectionPolygon = new Polygon(stairFlightPoints.ToArray());
+            Polygon sectionPolygon = new Polygon(stairFlightPoints.ToArray()).Reversed();
             Profile sectionProfile = new Profile(sectionPolygon);
 
             return sectionProfile;
