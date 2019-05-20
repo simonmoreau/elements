@@ -147,34 +147,34 @@ namespace Elements
 
         private Profile StraightStairFlightSection()
         {
-            List<Vector3> flightPoints = new List<Vector3>();
+            List<Vector3> stairFlightPoints = new List<Vector3>();
 
             Vector3 tread = new Vector3(this.TreadLength, 0, 0);
             Vector3 riser = new Vector3(0, this.RiserHeight, 0);
 
             for (int i = 0; i < this.NumberOfRiser; i++)
             {
-                flightPoints.Add(new Vector3(i * this.TreadLength, i * this.RiserHeight, 0));
-                flightPoints.Add(new Vector3(i * this.TreadLength, (i + 1) * this.RiserHeight, 0));
+                stairFlightPoints.Add(new Vector3(i * this.TreadLength, i * this.RiserHeight, 0));
+                stairFlightPoints.Add(new Vector3(i * this.TreadLength, (i + 1) * this.RiserHeight, 0));
             }
 
             // Last step
             Vector3 lastStepPoint = new Vector3(this.NumberOfRiser * this.TreadLength, this.NumberOfRiser * this.RiserHeight, 0);
-            flightPoints.Add(lastStepPoint);
+            stairFlightPoints.Add(lastStepPoint);
 
             // Run thickness
             Vector3 runThickness = (riser + tread).Cross(Vector3.ZAxis).Normalized() * this.WaistThickness;
             double alpha = runThickness.AngleTo(Vector3.YAxis.Negated());
             alpha = alpha * Math.PI / 180;
             Vector3 verticalThickness = (runThickness.Length() / Math.Cos(alpha)) * Vector3.YAxis.Negated();
-            flightPoints.Add(lastStepPoint + verticalThickness);
+            stairFlightPoints.Add(lastStepPoint + verticalThickness);
 
             alpha = (riser + tread).Negated().AngleTo(Vector3.XAxis);
             alpha = alpha * Math.PI / 180;
             Vector3 horizontalThickness = (runThickness.Length() / Math.Sin(alpha)) * Vector3.XAxis;
-            flightPoints.Add(horizontalThickness);
+            stairFlightPoints.Add(horizontalThickness);
 
-            Polygon sectionPolygon = new Polygon(flightPoints.ToArray());
+            Polygon sectionPolygon = new Polygon(stairFlightPoints.ToArray());
             Profile sectionProfile = new Profile(sectionPolygon);
 
             return sectionProfile;
