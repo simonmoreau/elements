@@ -84,6 +84,16 @@ namespace Elements
         public virtual bool BothSides => true;
 
         /// <summary>
+        /// The end of the walking line.
+        /// </summary>
+        public Vector3 End { get; protected set; }
+
+        /// <summary>
+        /// The start of the walking line.
+        /// </summary>
+        public Vector3 Start { get; protected set; }
+
+        /// <summary>
         /// Create a stair flight based on the walkingLine.
         /// </summary>
         /// <param name="walkingLine">The walking line is represented by a line directed into the upward direction.</param>
@@ -137,6 +147,9 @@ namespace Elements
                 stairFlightTransform.Concatenate(transform);
             }
 
+            this.Start = this.Transform.OfPoint(new Vector3());
+            this.End = this.Transform.OfPoint(new Vector3());
+
             this.Profile = StraightStairFlightSection();
             this.ExtrudeDepth = this.FlightWidth;
             this.ExtrudeDirection = Vector3.ZAxis;
@@ -150,6 +163,8 @@ namespace Elements
             Vector3 tread = new Vector3(this.TreadLength, 0, 0);
             Vector3 riser = new Vector3(0, this.RiserHeight, 0);
 
+            
+
             for (int i = 0; i < this.NumberOfRiser; i++)
             {
                 stairFlightPoints.Add(new Vector3(i * this.TreadLength, i * this.RiserHeight, 0));
@@ -159,6 +174,8 @@ namespace Elements
             // Last step
             Vector3 lastStepPoint = new Vector3(this.NumberOfRiser * this.TreadLength, this.NumberOfRiser * this.RiserHeight, 0);
             stairFlightPoints.Add(lastStepPoint);
+
+            this.End = this.Transform.OfPoint(lastStepPoint);
 
             // Run thickness
             Vector3 runThickness = (riser + tread).Cross(Vector3.ZAxis).Normalized() * this.WaistThickness;
@@ -176,6 +193,14 @@ namespace Elements
             Profile sectionProfile = new Profile(sectionPolygon);
 
             return sectionProfile;
+        }
+
+        /// <summary>
+        /// Calculate the height of the stair flight.
+        /// </summary>
+        public double Height()
+        {
+            return this.RiserHeight * this.NumberOfRiser;
         }
 
     }

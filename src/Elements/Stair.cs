@@ -43,15 +43,15 @@ namespace Elements
         /// <summary>
         /// Create a stair based on the walkingLine.
         /// </summary>
-        /// <param name="stairType">The type of the stair.</param>
+        /// <param name="elementType">The type of the stair.</param>
         /// <param name="walkingLine">The walking line is represented by an array of lines directed into the upward direction.</param>
         /// <param name="riserHeight">The vertical distance from tread to tread. The riser height is supposed to be equal for all steps of the stair.</param>
         /// <param name="treadLength">The horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair at the walking line.</param>
         /// <param name="transform">The transform of the stair.
         /// This transform will be concatenated to the transform created to place the stair along its walking line.</param>
-        public Stair(StairType stairType, Line[] walkingLine, double riserHeight, double treadLength, Transform transform = null)
+        public Stair(StairType elementType, Line[] walkingLine, double riserHeight, double treadLength, Transform transform = null)
         {
-            this.ElementType = stairType;
+            this.ElementType = elementType;
             this.WalkingLine = walkingLine;
             this.RiserHeight = riserHeight;
             this.TreadLength = treadLength;
@@ -62,10 +62,13 @@ namespace Elements
                 case StairTypology.StraightRunStair:
                     CreateStraightRunStair();
                     break;
+                case StairTypology.QuarterTurnStair:
+                    CreateTwoFlightsStair();
+                    break;
                 default:
                     throw new NotImplementedException();
             }
-            
+
 
             this.Elements = new List<Element>();
             this.Elements.AddRange(this._stairFlight);
@@ -77,6 +80,33 @@ namespace Elements
             StairFlight stairFlight = new StairFlight(this.WalkingLine[0], this.RiserHeight, this.TreadLength,
             this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
             this._stairFlight.Add(stairFlight);
+        }
+
+        private void CreateTwoFlightsStair()
+        {
+
+            StairFlight stairFlight1 = new StairFlight(this.WalkingLine[0], this.RiserHeight, this.TreadLength,
+            this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
+            this._stairFlight.Add(stairFlight1);
+
+            StairFlight stairFlight2 = new StairFlight(this.WalkingLine[1], this.RiserHeight, this.TreadLength,
+this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
+            this._stairFlight.Add(stairFlight2);
+
+            Vector3 landingHeight = stairFlight1.Height() * Vector3.ZAxis;
+            Vector3 halfLandingWidth1 = (this.ElementType.FlightWidth / 2) * Vector3.ZAxis.Cross(this.WalkingLine[0].Direction().Normalized());
+
+            Line stairFlight1UpperLine = new Line(
+                stairFlight1.End + landingHeight + halfLandingWidth1,
+                stairFlight1.End + landingHeight + halfLandingWidth1.Negated()
+            );
+
+            Vector3 halfLandingWidth2 = (this.ElementType.FlightWidth / 2) * Vector3.ZAxis.Cross(this.WalkingLine[1].Direction().Normalized());
+
+            Line stairFlight2UpperLine = new Line(
+                stairFlight2.Start + landingHeight + halfLandingWidth2,
+                stairFlight2.Start + landingHeight + halfLandingWidth2.Negated()
+                );
         }
     }
 }
