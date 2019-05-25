@@ -44,7 +44,7 @@ namespace Elements.Tests
                 new Line(new Vector3(0.5, 2.5, 0),new Vector3(2.5, 2.5, 0))
                 };
 
-            StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0, null);
+            StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0.02, null);
             var Stair1 = new Stair(stairType, walkingLines, StairTypology.QuarterTurnStair, null);
 
             var model = new Model();

@@ -165,8 +165,8 @@ namespace Elements
 
             for (int i = 0; i < this.NumberOfRiser; i++)
             {
-                stairFlightPoints.Add(new Vector3(i * this.TreadLength, i * this.RiserHeight, 0));
-                stairFlightPoints.Add(new Vector3(i * this.TreadLength, (i + 1) * this.RiserHeight, 0));
+                stairFlightPoints.Add(new Vector3(i * this.TreadLength + this.NosingLength, i * this.RiserHeight, 0));
+                stairFlightPoints.Add(new Vector3(i * this.TreadLength , (i + 1) * this.RiserHeight, 0));
             }
 
             // Last step
