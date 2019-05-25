@@ -20,13 +20,13 @@ namespace Elements.Tests
                 new Vector3(0, 10, 0)
             )};
 
-            StairType stairType = new StairType("test", 0.15, 1, 0, null);
-            var Stair1 = new Stair(stairType, walkingLines, StairTypology.StraightRunStair, 0.2, 0.3, null);
+            StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0, null);
+            var Stair1 = new Stair(stairType, walkingLines, StairTypology.StraightRunStair, null);
 
             var model = new Model();
 
-            Assert.Equal(0.2, Stair1.RiserHeight);
-            Assert.Equal(0.3, Stair1.TreadLength);
+            Assert.Equal(0.2, Stair1.ElementType.RiserHeight);
+            Assert.Equal(0.3, Stair1.ElementType.TreadLength);
 
             this.Model.AddElement(Stair1);
             this.Model.AddElement(floor);
@@ -44,13 +44,13 @@ namespace Elements.Tests
                 new Line(new Vector3(0.5, 2.5, 0),new Vector3(2.5, 2.5, 0))
                 };
 
-            StairType stairType = new StairType("test", 0.15, 1, 0, null);
-            var Stair1 = new Stair(stairType, walkingLines, StairTypology.QuarterTurnStair, 0.2, 0.3, null);
+            StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0, null);
+            var Stair1 = new Stair(stairType, walkingLines, StairTypology.QuarterTurnStair, null);
 
             var model = new Model();
 
-            Assert.Equal(0.2, Stair1.RiserHeight);
-            Assert.Equal(0.3, Stair1.TreadLength);
+            Assert.Equal(0.2, Stair1.ElementType.RiserHeight);
+            Assert.Equal(0.3, Stair1.ElementType.TreadLength);
 
             this.Model.AddElement(Stair1);
             this.Model.AddElement(floor);
@@ -63,8 +63,8 @@ namespace Elements.Tests
                 new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0))
                 };
 
-            StairType stairType = new StairType("test", 0.15, 1, 0, null);
-            Assert.Throws<ArgumentException>(() => new Stair(stairType, walkingLines, StairTypology.QuarterTurnStair, 0.2, 0.3, null));
+            StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0, null);
+            Assert.Throws<ArgumentException>(() => new Stair(stairType, walkingLines, StairTypology.QuarterTurnStair, null));
         }
 
         [Fact]
@@ -75,8 +75,8 @@ namespace Elements.Tests
                 new Line(new Vector3(2, 2, 0),new Vector3(2, 0, 0))
                 };
 
-            StairType stairType = new StairType("test", 0.15, 1, 0, null);
-            Assert.Throws<ArgumentException>(() => new Stair(stairType, walkingLines, StairTypology.StraightRunStair, 0.2, 0.3, null));
+            StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0, null);
+            Assert.Throws<ArgumentException>(() => new Stair(stairType, walkingLines, StairTypology.StraightRunStair, null));
         }
     }
 }

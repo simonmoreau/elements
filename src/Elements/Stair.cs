@@ -36,15 +36,6 @@ namespace Elements
         /// The walking line of the stair flight.
         /// </summary>
         public Line[] WalkingLine { get; }
-        /// <summary>
-        /// Vertical distance from tread to tread. The riser height is supposed to be equal for all steps of the stair flight.
-        /// </summary>
-        public double RiserHeight { get; }
-
-        /// <summary>
-        /// Horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair flight at the walking line.
-        /// </summary>
-        public double TreadLength { get; }
 
         /// <summary>
         /// Create a stair based on the walkingLine.
@@ -52,17 +43,13 @@ namespace Elements
         /// <param name="elementType">The type of the stair.</param>
         /// <param name="walkingLine">The walking line is represented by an array of lines directed into the upward direction.</param>
         /// <param name="stairTypology">The typology of the stair.</param>
-        /// <param name="riserHeight">The vertical distance from tread to tread. The riser height is supposed to be equal for all steps of the stair.</param>
-        /// <param name="treadLength">The horizontal distance from the front of the thread to the front of the next tread. The tread length is supposed to be equal for all steps of the stair at the walking line.</param>
         /// <param name="transform">The transform of the stair.
         /// This transform will be concatenated to the transform created to place the stair along its walking line.</param>
-        public Stair(StairType elementType, Line[] walkingLine, StairTypology stairTypology, double riserHeight, double treadLength, Transform transform = null)
+        public Stair(StairType elementType, Line[] walkingLine, StairTypology stairTypology, Transform transform = null)
         {
             this.ElementType = elementType;
             this.WalkingLine = walkingLine;
             this.StairTypology = stairTypology;
-            this.RiserHeight = riserHeight;
-            this.TreadLength = treadLength;
             this.Transform = transform;
 
             CheckInput();
@@ -108,7 +95,7 @@ namespace Elements
 
         private void CreateStraightRunStair()
         {
-            StairFlight stairFlight = new StairFlight(this.WalkingLine[0], this.RiserHeight, this.TreadLength,
+            StairFlight stairFlight = new StairFlight(this.WalkingLine[0], this.ElementType.RiserHeight, this.ElementType.TreadLength,
             this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
             this._stairFlight.Add(stairFlight);
         }
@@ -116,7 +103,7 @@ namespace Elements
         private void CreateTwoFlightsStair()
         {
 
-            StairFlight stairFlight1 = new StairFlight(this.WalkingLine[0], this.RiserHeight, this.TreadLength,
+            StairFlight stairFlight1 = new StairFlight(this.WalkingLine[0], this.ElementType.RiserHeight, this.ElementType.TreadLength,
             this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, this.Transform);
             this._stairFlight.Add(stairFlight1);
 
@@ -126,7 +113,7 @@ namespace Elements
                 this.WalkingLine[1].End + landingHeight
             );
 
-            StairFlight stairFlight2 = new StairFlight(walkingLine2, this.RiserHeight, this.TreadLength,
+            StairFlight stairFlight2 = new StairFlight(walkingLine2, this.ElementType.RiserHeight, this.ElementType.TreadLength,
 this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, this.Transform);
             this._stairFlight.Add(stairFlight2);
 
