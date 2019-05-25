@@ -47,5 +47,28 @@ namespace Elements.Tests
 
             this.Model.AddElement(Stair1);
         }
+
+        [Fact]
+        public void walkingLineNumber()
+        {
+            Line[] walkingLines = {
+                new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0))
+                };
+
+            StairType stairType = new StairType("test", StairTypology.QuarterTurnStair, 0.15, 1, 0, null);
+            Assert.Throws<ArgumentException>(() => new Stair(stairType, walkingLines, 0.2, 0.3, null));
+        }
+
+        [Fact]
+        public void walkingLineNumber2()
+        {
+            Line[] walkingLines = {
+                new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0)),
+                new Line(new Vector3(2, 2, 0),new Vector3(2, 0, 0))
+                };
+
+            StairType stairType = new StairType("test", StairTypology.StraightRunStair, 0.15, 1, 0, null);
+            Assert.Throws<ArgumentException>(() => new Stair(stairType, walkingLines, 0.2, 0.3, null));
+        }
     }
 }

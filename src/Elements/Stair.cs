@@ -57,6 +57,8 @@ namespace Elements
             this.TreadLength = treadLength;
             this.Transform = transform;
 
+            CheckInput();
+
             switch (this.ElementType.StairTypology)
             {
                 case StairTypology.StraightRunStair:
@@ -82,6 +84,27 @@ namespace Elements
             this._stairFlight.Add(stairFlight);
         }
 
+        private void CheckInput()
+        {
+            switch (this.ElementType.StairTypology)
+            {
+                case StairTypology.StraightRunStair:
+                    if (this.WalkingLine.Length != 1)
+                    {
+                        throw new ArgumentException("You must have only one walking line to create a straight run stair.");
+                    }
+                    break;
+                case StairTypology.QuarterTurnStair:
+                    if (this.WalkingLine.Length != 2)
+                    {
+                        throw new ArgumentException("You must have two walking lines to create a quarter turn stair.");
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         private void CreateTwoFlightsStair()
         {
 
@@ -89,11 +112,13 @@ namespace Elements
             this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
             this._stairFlight.Add(stairFlight1);
 
+
             StairFlight stairFlight2 = new StairFlight(this.WalkingLine[1], this.RiserHeight, this.TreadLength,
 this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
             this._stairFlight.Add(stairFlight2);
 
             Vector3 landingHeight = stairFlight1.Height() * Vector3.ZAxis;
+
             Vector3 halfLandingWidth1 = (this.ElementType.FlightWidth / 2) * Vector3.ZAxis.Cross(this.WalkingLine[0].Direction().Normalized());
 
             Line stairFlight1UpperLine = new Line(
@@ -107,6 +132,7 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
                 stairFlight2.Start + landingHeight + halfLandingWidth2,
                 stairFlight2.Start + landingHeight + halfLandingWidth2.Negated()
                 );
+
         }
     }
 }
