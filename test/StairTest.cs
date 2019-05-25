@@ -41,7 +41,7 @@ namespace Elements.Tests
             this.Name = "QuarterTurnStair";
             Line[] walkingLines = {
                 new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0)),
-                new Line(new Vector3(2, 2, 0),new Vector3(2, 0, 0))
+                new Line(new Vector3(2, 3, 0),new Vector3(2, 0, 0))
                 };
 
             StairType stairType = new StairType("test", StairTypology.QuarterTurnStair, 0.15, 1, 0, null);

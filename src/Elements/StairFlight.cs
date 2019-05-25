@@ -186,6 +186,7 @@ namespace Elements
             alpha = (riser + tread).Negated().AngleTo(Vector3.XAxis);
             alpha = alpha * Math.PI / 180;
             Vector3 horizontalThickness = (runThickness.Length() / Math.Sin(alpha)) * Vector3.XAxis;
+            this._baseThickness = horizontalThickness.Length();
             stairFlightPoints.Add(horizontalThickness);
 
             Polygon sectionPolygon = new Polygon(stairFlightPoints.ToArray()).Reversed();
@@ -210,6 +211,17 @@ namespace Elements
         {
             return this._landingThickness;
         }
+
+                private double _baseThickness;
+        /// <summary>
+        /// The thickness of the base surface of the stair, required to place the stair on a floor.
+        /// </summary>
+        public double BaseThickness()
+        {
+            return this._baseThickness;
+        }
+
+
 
 
     }

@@ -128,23 +128,23 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
 
         private void CreateLanding(StairFlight stairFlight1, StairFlight stairFlight2)
         {
-            Vector3 landingHeight = stairFlight1.Height() * Vector3.ZAxis;
-
             IList<Vector3> landingPoints = new List<Vector3>();
 
             Vector3 halfWidth1 = (stairFlight1.FlightWidth / 2) * Vector3.ZAxis.Cross(stairFlight1.WalkingLine.Direction().Normalized());
             Vector3 landingWidth1 = stairFlight1.FlightWidth * stairFlight1.WalkingLine.Direction().Normalized();
-            landingPoints.Add(stairFlight1.End + landingHeight + halfWidth1);
-            landingPoints.Add(stairFlight1.End + landingHeight + halfWidth1.Negated());
-            landingPoints.Add(stairFlight1.End + landingHeight + halfWidth1 + landingWidth1);
-            landingPoints.Add(stairFlight1.End + landingHeight + halfWidth1.Negated() + landingWidth1);
+            landingPoints.Add(stairFlight1.End + halfWidth1);
+            landingPoints.Add(stairFlight1.End + halfWidth1.Negated());
+            landingPoints.Add(stairFlight1.End + halfWidth1 + landingWidth1);
+            landingPoints.Add(stairFlight1.End + halfWidth1.Negated() + landingWidth1);
 
             Vector3 halfWidth2 = (stairFlight2.FlightWidth / 2) * Vector3.ZAxis.Cross(stairFlight2.WalkingLine.Direction().Normalized());
             Vector3 landingWidth2 = stairFlight2.FlightWidth * stairFlight2.WalkingLine.Direction().Negated().Normalized();
-            landingPoints.Add(stairFlight2.Start + landingHeight + halfWidth2);
-            landingPoints.Add(stairFlight2.Start + landingHeight + halfWidth2.Negated());
-            landingPoints.Add(stairFlight2.Start + landingHeight + halfWidth2 + landingWidth2);
-            landingPoints.Add(stairFlight2.Start + landingHeight + halfWidth2.Negated() + landingWidth2);
+            Vector3 BaseThickness = stairFlight2.BaseThickness() * stairFlight2.WalkingLine.Direction().Normalized();
+
+            landingPoints.Add(stairFlight2.Start + halfWidth2 + BaseThickness);
+            landingPoints.Add(stairFlight2.Start + halfWidth2.Negated() + BaseThickness);
+            landingPoints.Add(stairFlight2.Start + halfWidth2 + landingWidth2);
+            landingPoints.Add(stairFlight2.Start + halfWidth2.Negated() + landingWidth2);
 
             List<Vector3> landingHull = ConvexHull.MakeHull(landingPoints);
             Polygon landingPolygon = new Polygon(landingHull.ToArray());
@@ -153,7 +153,8 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
                 landingPolygon = landingPolygon.Reversed();
             }
 
-            Transform landingHeightTansform = new Transform(landingHeight + new Vector3(0,0,-stairFlight1.LandingThickness()));
+            Vector3 landingHeight = (stairFlight1.Height() -stairFlight1.LandingThickness())  * Vector3.ZAxis;
+            Transform landingHeightTansform = new Transform(landingHeight);
             if (this.Transform != null) { landingHeightTansform.Concatenate(this.Transform); }
 
             FloorType type = new FloorType("landing", stairFlight1.LandingThickness());
