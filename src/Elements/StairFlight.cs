@@ -163,7 +163,7 @@ namespace Elements
             Vector3 tread = new Vector3(this.TreadLength, 0, 0);
             Vector3 riser = new Vector3(0, this.RiserHeight, 0);
 
-            
+
 
             for (int i = 0; i < this.NumberOfRiser; i++)
             {
@@ -182,6 +182,7 @@ namespace Elements
             double alpha = runThickness.AngleTo(Vector3.YAxis.Negated());
             alpha = alpha * Math.PI / 180;
             Vector3 verticalThickness = (runThickness.Length() / Math.Cos(alpha)) * Vector3.YAxis.Negated();
+            this._landingThickness = verticalThickness.Length();
             stairFlightPoints.Add(lastStepPoint + verticalThickness);
 
             alpha = (riser + tread).Negated().AngleTo(Vector3.XAxis);
@@ -202,6 +203,16 @@ namespace Elements
         {
             return this.RiserHeight * this.NumberOfRiser;
         }
+
+        private double _landingThickness;
+        /// <summary>
+        /// Calculate the thickness of an associate stair landing.
+        /// </summary>
+        public double LandingThickness()
+        {
+            return this._landingThickness;
+        }
+
 
     }
 

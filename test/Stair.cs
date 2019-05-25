@@ -12,13 +12,13 @@ namespace Elements.Tests
         public void StraightRunStair()
         {
             this.Name = "StraightRunStair";
-            Line[] walkingLine = {new Line(
+            Line[] walkingLines = {new Line(
                 new Vector3(0, 0, 0),
                 new Vector3(0, 10, 0)
             )};
 
             StairType stairType = new StairType("test", StairTypology.StraightRunStair, 0.15, 1, 0, null);
-            var Stair1 = new Stair(stairType, walkingLine, 0.2, 0.3, null);
+            var Stair1 = new Stair(stairType, walkingLines, 0.2, 0.3, null);
 
             var model = new Model();
 
@@ -32,13 +32,13 @@ namespace Elements.Tests
         public void QuarterTurnStair()
         {
             this.Name = "QuarterTurnStair";
-            Line[] walkingLine = {
+            Line[] walkingLines = {
                 new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0)),
                 new Line(new Vector3(2, 2, 0),new Vector3(2, 0, 0))
                 };
 
             StairType stairType = new StairType("test", StairTypology.QuarterTurnStair, 0.15, 1, 0, null);
-            var Stair1 = new Stair(stairType, walkingLine, 0.2, 0.3, null);
+            var Stair1 = new Stair(stairType, walkingLines, 0.2, 0.3, null);
 
             var model = new Model();
 
@@ -49,7 +49,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void walkingLineNumber()
+        public void WalkingLinesNumber()
         {
             Line[] walkingLines = {
                 new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0))
@@ -60,7 +60,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void walkingLineNumber2()
+        public void WalkingLinesNumber2()
         {
             Line[] walkingLines = {
                 new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0)),
