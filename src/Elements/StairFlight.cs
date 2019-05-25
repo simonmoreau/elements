@@ -163,8 +163,6 @@ namespace Elements
             Vector3 tread = new Vector3(this.TreadLength, 0, 0);
             Vector3 riser = new Vector3(0, this.RiserHeight, 0);
 
-
-
             for (int i = 0; i < this.NumberOfRiser; i++)
             {
                 stairFlightPoints.Add(new Vector3(i * this.TreadLength, i * this.RiserHeight, 0));

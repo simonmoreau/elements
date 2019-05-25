@@ -11,6 +11,9 @@ namespace Elements.Tests
         [Fact]
         public void StraightRunStair()
         {
+            Polygon square = Polygon.Rectangle(10, 10);
+            Floor floor = new Floor(square, new FloorType("floor", 0.1),-0.1,null,null);
+
             this.Name = "StraightRunStair";
             Line[] walkingLines = {new Line(
                 new Vector3(0, 0, 0),
@@ -26,11 +29,15 @@ namespace Elements.Tests
             Assert.Equal(0.3, Stair1.TreadLength);
 
             this.Model.AddElement(Stair1);
+            this.Model.AddElement(floor);
         }
 
         [Fact]
         public void QuarterTurnStair()
         {
+            Polygon square = Polygon.Rectangle(10, 10);
+            Floor floor = new Floor(square, new FloorType("floor", 0.1),-0.1,null,null);
+
             this.Name = "QuarterTurnStair";
             Line[] walkingLines = {
                 new Line(new Vector3(0, 0, 0),new Vector3(0, 2, 0)),
@@ -46,6 +53,7 @@ namespace Elements.Tests
             Assert.Equal(0.3, Stair1.TreadLength);
 
             this.Model.AddElement(Stair1);
+            this.Model.AddElement(floor);
         }
 
         [Fact]

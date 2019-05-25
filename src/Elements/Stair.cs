@@ -77,13 +77,6 @@ namespace Elements
             this.Elements.AddRange(this._landings);
         }
 
-        private void CreateStraightRunStair()
-        {
-            StairFlight stairFlight = new StairFlight(this.WalkingLine[0], this.RiserHeight, this.TreadLength,
-            this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
-            this._stairFlight.Add(stairFlight);
-        }
-
         private void CheckInput()
         {
             switch (this.ElementType.StairTypology)
@@ -105,6 +98,13 @@ namespace Elements
             }
         }
 
+        private void CreateStraightRunStair()
+        {
+            StairFlight stairFlight = new StairFlight(this.WalkingLine[0], this.RiserHeight, this.TreadLength,
+            this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, null);
+            this._stairFlight.Add(stairFlight);
+        }
+
         private void CreateTwoFlightsStair()
         {
 
@@ -122,7 +122,7 @@ namespace Elements
 this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, this.Transform);
             this._stairFlight.Add(stairFlight2);
 
-            CreateLanding(stairFlight1,stairFlight2);
+            CreateLanding(stairFlight1, stairFlight2);
 
         }
 
@@ -148,16 +148,16 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
 
             List<Vector3> landingHull = ConvexHull.MakeHull(landingPoints);
             Polygon landingPolygon = new Polygon(landingHull.ToArray());
-             if (!landingPolygon.Plane().Normal.IsAlmostEqualTo(Vector3.ZAxis))
-             {
-                 landingPolygon = landingPolygon.Reversed();
-             }
+            if (!landingPolygon.Plane().Normal.IsAlmostEqualTo(Vector3.ZAxis))
+            {
+                landingPolygon = landingPolygon.Reversed();
+            }
 
-             Transform landingHeightTansform = new Transform(landingHeight);
-             if (this.Transform != null) {landingHeightTansform.Concatenate(this.Transform);}
+            Transform landingHeightTansform = new Transform(landingHeight + new Vector3(0,0,-stairFlight1.LandingThickness()));
+            if (this.Transform != null) { landingHeightTansform.Concatenate(this.Transform); }
 
-            FloorType type = new FloorType("landing",stairFlight1.LandingThickness());
-            Floor landing = new Floor(landingPolygon,type,0,landingHeightTansform,null);
+            FloorType type = new FloorType("landing", stairFlight1.LandingThickness());
+            Floor landing = new Floor(landingPolygon, type, 0, landingHeightTansform, null);
             this._landings.Add(landing);
         }
     }
