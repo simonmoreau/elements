@@ -156,15 +156,10 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
             landingPoints1.AddRange(landingPoints2);
             Vector3EqualityComparer comparer = new Vector3EqualityComparer();
             landingPoints1 = landingPoints1.Distinct(comparer).ToList();
-
-            List<Vector3> landingPoints = Vector3Extensions.SortClockwise(landingPoints1);
+            Vector3 center = stairFlight2.Start + landingWidth2*0.5;
+            List<Vector3> landingPoints = Vector3Extensions.SortClockwise(landingPoints1, center);
 
             Polygon landingPolygon = new Polygon(landingPoints.ToArray());
-
-            if (!landingPolygon.Plane().Normal.IsAlmostEqualTo(Vector3.ZAxis))
-            {
-                landingPolygon = landingPolygon.Reversed();
-            }
 
             Vector3 landingHeight = (stairFlight1.Height() - stairFlight1.LandingThickness()) * Vector3.ZAxis;
             Transform landingHeightTansform = new Transform(landingHeight);

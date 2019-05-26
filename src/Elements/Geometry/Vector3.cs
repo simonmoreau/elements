@@ -533,15 +533,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Sort a collection of Vector3 around their average.
+        /// Sort a collection of Vector3 around a central point.
         /// </summary>
         /// <param name="points">The collection of Vector3 to sort.</param>
+        /// <param name="center">The central point.</param>
         /// <returns>A new sorted collection of Vector3</returns>
-        public static List<Vector3> SortClockwise(List<Vector3> points)
+        public static List<Vector3> SortClockwise(List<Vector3> points, Vector3 center)
         {
-            Vector3 average = Average(points);
-            average = new Vector3(average.X, average.Y, 0);
-            Transform transform = new Transform(average);
+            center = new Vector3(center.X, center.Y, 0);
+            Transform transform = new Transform(center);
             transform.Invert();
             List<Vector3> transformedPoint = points.Select(p => transform.OfPoint(p)).ToList();
             List<Vector3Polar> pointsPolar = transformedPoint.Select(p => CartesianToPolar(p)).ToList();
