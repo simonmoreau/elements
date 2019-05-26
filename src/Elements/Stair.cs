@@ -7,6 +7,7 @@ using Hypar.Elements.Interfaces;
 using Elements.Geometry.Solids;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Elements
@@ -28,7 +29,7 @@ namespace Elements
         /// The stair type of the stair.
         /// </summary>
         public StairType ElementType { get; protected set; }
-                /// <summary>
+        /// <summary>
         /// The typology of the stair.
         /// </summary>
         public StairTypology StairTypology { get; }
@@ -38,7 +39,7 @@ namespace Elements
         public Line[] WalkingLine { get; }
 
         /// <summary>
-        /// Create a stair based on the walkingLine.
+        /// Create a stair based on a typology and the walking lines.
         /// </summary>
         /// <param name="elementType">The type of the stair.</param>
         /// <param name="walkingLine">The walking line is represented by an array of lines directed into the upward direction.</param>
@@ -123,26 +124,43 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
 
         private void CreateLanding(StairFlight stairFlight1, StairFlight stairFlight2)
         {
-            IList<Vector3> landingPoints = new List<Vector3>();
+            List<Vector3> landingPoints1 = new List<Vector3>();
 
             Vector3 halfWidth1 = (stairFlight1.FlightWidth / 2) * Vector3.ZAxis.Cross(stairFlight1.WalkingLine.Direction().Normalized());
             Vector3 landingWidth1 = stairFlight1.FlightWidth * stairFlight1.WalkingLine.Direction().Normalized();
-            landingPoints.Add(stairFlight1.End + halfWidth1);
-            landingPoints.Add(stairFlight1.End + halfWidth1.Negated());
-            landingPoints.Add(stairFlight1.End + halfWidth1 + landingWidth1);
-            landingPoints.Add(stairFlight1.End + halfWidth1.Negated() + landingWidth1);
+            landingPoints1.Add(stairFlight1.End + halfWidth1);
+            landingPoints1.Add(stairFlight1.End + halfWidth1 + landingWidth1);
+            landingPoints1.Add(stairFlight1.End + halfWidth1.Negated() + landingWidth1);
+            landingPoints1.Add(stairFlight1.End + halfWidth1.Negated());
+            Polygon landing1 = new Polygon(landingPoints1.ToArray());
 
             Vector3 halfWidth2 = (stairFlight2.FlightWidth / 2) * Vector3.ZAxis.Cross(stairFlight2.WalkingLine.Direction().Normalized());
             Vector3 landingWidth2 = stairFlight2.FlightWidth * stairFlight2.WalkingLine.Direction().Negated().Normalized();
             Vector3 BaseThickness = stairFlight2.BaseThickness() * stairFlight2.WalkingLine.Direction().Normalized();
 
-            landingPoints.Add(stairFlight2.Start + halfWidth2 + BaseThickness);
-            landingPoints.Add(stairFlight2.Start + halfWidth2.Negated() + BaseThickness);
-            landingPoints.Add(stairFlight2.Start + halfWidth2 + landingWidth2);
-            landingPoints.Add(stairFlight2.Start + halfWidth2.Negated() + landingWidth2);
+            List<Vector3> landingPoints2 = new List<Vector3>();
+            landingPoints2.Add(stairFlight2.Start + halfWidth2 + BaseThickness);
+            landingPoints2.Add(stairFlight2.Start + halfWidth2);
+            landingPoints2.Add(stairFlight2.Start + halfWidth2 + landingWidth2);
+            landingPoints2.Add(stairFlight2.Start + halfWidth2.Negated() + landingWidth2);
+            landingPoints2.Add(stairFlight2.Start + halfWidth2.Negated());
+            landingPoints2.Add(stairFlight2.Start + halfWidth2.Negated() + BaseThickness);
+            Polygon landing2 = new Polygon(landingPoints2.ToArray());
 
-            List<Vector3> landingHull = ConvexHull.MakeHull(landingPoints);
-            Polygon landingPolygon = new Polygon(landingHull.ToArray());
+            if (landing1.Contains(stairFlight2.Start + halfWidth2 + landingWidth2)) { landingPoints2.Remove(stairFlight2.Start + halfWidth2 + landingWidth2); }
+            if (landing1.Contains(stairFlight2.Start + halfWidth2.Negated() + landingWidth2)) { landingPoints2.Remove(stairFlight2.Start + halfWidth2.Negated() + landingWidth2); }
+
+            if (landing2.Contains(stairFlight1.End + halfWidth1 + landingWidth1)) { landingPoints1.Remove(stairFlight1.End + halfWidth1 + landingWidth1); }
+            if (landing2.Contains(stairFlight1.End + halfWidth1.Negated() + landingWidth1)) { landingPoints1.Remove(stairFlight1.End + halfWidth1.Negated() + landingWidth1); }
+
+            landingPoints1.AddRange(landingPoints2);
+            Vector3EqualityComparer comparer = new Vector3EqualityComparer();
+            landingPoints1 = landingPoints1.Distinct(comparer).ToList();
+
+            List<Vector3> landingPoints = Vector3Extensions.SortClockwise(landingPoints1);
+
+            Polygon landingPolygon = new Polygon(landingPoints.ToArray());
+
             if (!landingPolygon.Plane().Normal.IsAlmostEqualTo(Vector3.ZAxis))
             {
                 landingPolygon = landingPolygon.Reversed();

@@ -22,7 +22,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
-        public Polygon(Vector3[] vertices) : base(vertices){}
+        public Polygon(Vector3[] vertices) : base(vertices) { }
 
         /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
@@ -93,7 +93,7 @@ namespace Elements.Geometry
             return true;
         }
 
-         /// <summary>
+        /// <summary>
         /// Tests if the supplied Polygon is within this Polygon with or without edge coincident vertices when compared on a shared plane.
         /// </summary>
         /// <param name="polygon">The Polygon to compare to this Polygon.</param>
@@ -425,7 +425,7 @@ namespace Elements.Geometry
             co.Execute(ref solution, offset * scale);  // important, scale also used here
 
             var result = new Polygon[solution.Count];
-            for(var i=0; i<result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
             {
                 result[i] = solution[i].ToPolygon();
             }
@@ -439,17 +439,17 @@ namespace Elements.Geometry
         public override Line[] Segments()
         {
             var lines = new Line[_vertices.Length];
-            for(var i=0; i<_vertices.Length; i++)
+            for (var i = 0; i < _vertices.Length; i++)
             {
                 var a = _vertices[i];
                 Vector3 b;
-                if(i == _vertices.Length-1)
+                if (i == _vertices.Length - 1)
                 {
                     b = _vertices[0];
                 }
                 else
                 {
-                    b = _vertices[i+1];
+                    b = _vertices[i + 1];
                 }
                 lines[i] = new Line(a, b);
             }
@@ -472,18 +472,18 @@ namespace Elements.Geometry
         public override bool Equals(object obj)
         {
             var p = obj as Polygon;
-            if(p == null)
+            if (p == null)
             {
                 return false;
             }
-            if(this.Vertices.Length != p.Vertices.Length)
+            if (this.Vertices.Length != p.Vertices.Length)
             {
                 return false;
             }
 
-            for(var i=0; i<this.Vertices.Length; i++)
+            for (var i = 0; i < this.Vertices.Length; i++)
             {
-                if(!this.Vertices[i].Equals(p.Vertices[i]))
+                if (!this.Vertices[i].Equals(p.Vertices[i]))
                 {
                     return false;
                 }
@@ -508,7 +508,7 @@ namespace Elements.Geometry
         public Polygon Project(Plane p)
         {
             var projected = new Vector3[this.Vertices.Length];
-            for(var i=0; i<projected.Length; i++)
+            for (var i = 0; i < projected.Length; i++)
             {
                 projected[i] = this.Vertices[i].Project(p);
             }
@@ -524,7 +524,7 @@ namespace Elements.Geometry
         public Polygon ProjectAlong(Vector3 direction, Plane p)
         {
             var projected = new Vector3[this.Vertices.Length];
-            for(var i=0; i<this.Vertices.Length; i++)
+            for (var i = 0; i < this.Vertices.Length; i++)
             {
                 projected[i] = this.Vertices[i].ProjectAlong(direction, p);
             }
@@ -548,7 +548,19 @@ namespace Elements.Geometry
         /// <returns>A Plane.</returns>
         public Plane Plane()
         {
-            return new Plane(this._vertices[0], this._vertices[1], this._vertices[2]);
+            var v = this._vertices[0];
+            var x = this._vertices[1];
+            var i = 2;
+            var b = this._vertices[i];
+
+            // Solve for parallel vectors
+            while ((x-v).Normalized().IsAlmostEqualTo((b-x).Normalized())
+            || (x-v).Normalized().IsAlmostEqualTo((b-x).Negated().Normalized()))
+            {
+                i++;
+                b = this._vertices[i];
+            }
+            return new Plane(v, x, b);
         }
 
         /// <summary>
@@ -557,7 +569,7 @@ namespace Elements.Geometry
         /// <returns>A string containing the string representations of this Polygon's vertices.</returns>
         public override string ToString()
         {
-            return string.Join(", ", this._vertices.Select(v=>v.ToString()));
+            return string.Join(", ", this._vertices.Select(v => v.ToString()));
         }
 
         /// <summary>
@@ -566,9 +578,9 @@ namespace Elements.Geometry
         public override double Length()
         {
             var length = 0.0;
-            for(var i=0; i<this._vertices.Length; i++)
+            for (var i = 0; i < this._vertices.Length; i++)
             {
-                var next = i == this._vertices.Length - 1 ? 0 : i+1;
+                var next = i == this._vertices.Length - 1 ? 0 : i + 1;
                 length += this._vertices[i].DistanceTo(this._vertices[next]);
             }
             return length;
@@ -602,13 +614,13 @@ namespace Elements.Geometry
         public double Area()
         {
             var area = 0.0;
-            for(var i = 0; i<= _vertices.Length-1; i++)
+            for (var i = 0; i <= _vertices.Length - 1; i++)
             {
-                var j = (i+1) % _vertices.Length;
+                var j = (i + 1) % _vertices.Length;
                 area += _vertices[i].X * _vertices[j].Y;
                 area -= _vertices[i].Y * _vertices[j].X;
             }
-            return area/2.0;
+            return area / 2.0;
         }
     }
 
@@ -627,7 +639,7 @@ namespace Elements.Geometry
         internal static List<IntPoint> ToClipperPath(this Polygon p)
         {
             var path = new List<IntPoint>();
-            foreach(var v in p.Vertices)
+            foreach (var v in p.Vertices)
             {
                 path.Add(new IntPoint(v.X * scale, v.Y * scale));
             }
@@ -642,17 +654,17 @@ namespace Elements.Geometry
         internal static Polygon ToPolygon(this List<IntPoint> p)
         {
             var converted = new Vector3[p.Count];
-            for(var i=0; i<converted.Length; i++)
+            for (var i = 0; i < converted.Length; i++)
             {
                 var v = p[i];
-                converted[i] = new Vector3(v.X/scale, v.Y/scale);
+                converted[i] = new Vector3(v.X / scale, v.Y / scale);
             }
             return new Polygon(converted);
         }
 
         public static Polygon[] Reversed(this Polygon[] polygons)
         {
-            return polygons.Select(p=>p.Reversed()).ToArray();
+            return polygons.Select(p => p.Reversed()).ToArray();
         }
     }
 }
