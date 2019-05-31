@@ -37,11 +37,15 @@ namespace Elements
         /// The walking line of the stair flight.
         /// </summary>
         public Line[] WalkingLine { get; }
-
-        /// <summary>
+                /// <summary>
         /// The actual height of the riser. It can be shorter than the riser height of the StairType to take into account the height of the stair.
         /// </summary>
         public double ActualRiserHeight { get; }
+
+        /// <summary>
+        /// The list of stair flights in the stair, ordered from bottom to top.
+        /// </summary>
+        public List<StairFlight> StairFlights { get {return _stairFlight;} }
 
         /// <summary>
         /// Create a stair based on a typology and the walking lines.
