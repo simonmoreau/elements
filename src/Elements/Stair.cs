@@ -188,27 +188,6 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
 
         }
 
-        private void CreateHalfTurnStair()
-        {
-
-            StairFlight stairFlight1 = new StairFlight(this.WalkingLine[0], this.ActualRiserHeight, this.ElementType.TreadLength,
-            this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, this.Transform);
-            this._stairFlight.Add(stairFlight1);
-
-            Vector3 landingHeight = stairFlight1.Height() * Vector3.ZAxis;
-            Line walkingLine2 = new Line(
-                this.WalkingLine[1].Start + landingHeight,
-                this.WalkingLine[1].End + landingHeight
-            );
-
-            StairFlight stairFlight2 = new StairFlight(walkingLine2, this.ActualRiserHeight, this.ElementType.TreadLength,
-this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.Material, this.ElementType.NosingLength, this.Transform);
-            this._stairFlight.Add(stairFlight2);
-
-            CreateLanding(stairFlight1, stairFlight2);
-
-        }
-
         private void CreateLanding(StairFlight stairFlight1, StairFlight stairFlight2)
         {
             List<Vector3> landingPoints1 = new List<Vector3>();
