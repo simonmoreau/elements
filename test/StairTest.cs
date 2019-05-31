@@ -74,6 +74,26 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void HalfTurnStair()
+        {
+            Polygon square = Polygon.Rectangle(10, 10);
+            Floor floor = new Floor(square, new FloorType("floor", 0.1), -0.1, null, null);
+
+            this.Name = "HalfTurnStair";
+            StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0.02, null);
+
+            var Stair1 = new Stair(stairType, new Vector3(), Vector3.XAxis, 4, 0.2, null);
+
+            var model = new Model();
+
+            Assert.Equal(0.2, Stair1.ElementType.RiserHeight);
+            Assert.Equal(0.3, Stair1.ElementType.TreadLength);
+
+            this.Model.AddElement(Stair1);
+            this.Model.AddElement(floor);
+        }
+
+        [Fact]
         public void WalkingLinesNumber()
         {
             Line[] walkingLines = {
