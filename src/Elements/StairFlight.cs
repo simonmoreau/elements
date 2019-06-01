@@ -105,25 +105,8 @@ namespace Elements
         /// <param name="nosingLength">The horizontal distance from the front of the tread to the riser underneath. It is the overhang of the tread.</param>
         /// <param name="transform">The transform of the stair flight.
         /// This transform will be concatenated to the transform created to place the stair along its walking line.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the riser is less than or equal to zero.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the lenght of the tread is less than or equal to zero.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the waist is less than or equal to zero.</exception>
         public StairFlight(Line walkingLine, double riserHeight, double treadLength, double waistThickness, double flightWidth, Material material = null, double nosingLength = 0, Transform transform = null)
         {
-            if (riserHeight <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException($"The stairflight could not be created. The height of the riser provided, {riserHeight}, must be greater than 0.0.");
-            }
-
-            if (treadLength <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException($"The stairflight could not be created. The lenght of the tread provided, {treadLength}, must be greater than 0.0.");
-            }
-
-            if (waistThickness <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException($"The stairflight could not be created. The thickness of the waist provided, {treadLength}, must be greater than 0.0.");
-            }
 
             this.WalkingLine = walkingLine;
             this.TreadLength = treadLength;

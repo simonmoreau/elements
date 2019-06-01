@@ -56,8 +56,44 @@ namespace Elements
         /// <param name="flightWidth">The overall width of a stair flight.</param>
         /// <param name="nosingLength">The horizontal distance from the front of the tread to the riser underneath. It is the overhang of the tread.</param>
         /// <param name="material">The material used by the stair type.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the riser is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the lenght of the tread is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the waist is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the width of the flight is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the lenght of the nose is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the lenght of the tread is less than or equal to the lenght of the nose.</exception>
         public StairType(string name, double riserHeight, double treadLength, double waistThickness, double flightWidth, double nosingLength = 0, Material material = null) : base(name)
         {
+            if (riserHeight <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stair type could not be created. The height of the riser provided, {riserHeight}, must be greater than 0.0.");
+            }
+
+            if (treadLength <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stair type could not be created. The lenght of the tread provided, {treadLength}, must be greater than 0.0.");
+            }
+
+            if (waistThickness <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stair type could not be created. The thickness of the waist provided, {treadLength}, must be greater than 0.0.");
+            }
+
+            if (flightWidth <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stair type could not be created. The width of the flight provided, {flightWidth}, must be greater than 0.0.");
+            }
+
+            if (nosingLength <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The stair type could not be created. The lenght of the nose provided, {nosingLength}, must be greater than 0.0.");
+            }
+
+            if (treadLength <= nosingLength)
+            {
+                throw new ArgumentOutOfRangeException($"The stair type could not be created. The lenght of the tread provided, {treadLength}, must be greater than the lenght of the nose provided, {nosingLength}.");
+            }
+
             this.RiserHeight = riserHeight;
             this.TreadLength = treadLength;
             this.WaistThickness = waistThickness;

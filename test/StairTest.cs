@@ -48,12 +48,14 @@ namespace Elements.Tests
 
             var Stair1 = new Stair(stairType, walkingLines1, StairTypology.QuarterTurnStair, null);
 
+StairType stairType2 = new StairType("test", 0.2, 0.3, 0.15, 2.4, 0.02, null);
             Line[] walkingLines2 = {
                 new Line(new Vector3(4, 0, 0),new Vector3(4, 3, 0)),
-                new Line(new Vector3(5, 3, 0),new Vector3(5, 0, 0))
+                new Line(new Vector3(6.6, 3, 0),new Vector3(6.6, 0, 0))
                 };
 
-            var Stair2 = new Stair(stairType, walkingLines2, StairTypology.QuarterTurnStair, null);
+
+            var Stair2 = new Stair(stairType2, walkingLines2, StairTypology.QuarterTurnStair, null);
 
             Line[] walkingLines3 = {
                 new Line(new Vector3(-3, 0, 0),new Vector3(-3, 3, 0)),

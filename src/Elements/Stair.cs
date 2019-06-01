@@ -233,9 +233,9 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
 
             Vector3 landingHeight = (stairFlight1.Height() - stairFlight1.LandingThickness()) * Vector3.ZAxis;
             Transform landingHeightTansform = new Transform(landingHeight);
-            if (this.Transform != null) { landingHeightTansform.Concatenate(this.Transform); }
 
-            FloorType type = new FloorType("landing", stairFlight1.LandingThickness());
+            MaterialLayer materiaLayer = new MaterialLayer(this.ElementType.Material,stairFlight1.LandingThickness());
+            FloorType type = new FloorType("landing",new List<MaterialLayer>() {materiaLayer});
             Floor landing = new Floor(landingPolygon, type, 0, landingHeightTansform, null);
             this._landings.Add(landing);
         }
