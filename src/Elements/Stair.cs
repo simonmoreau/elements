@@ -104,26 +104,19 @@ namespace Elements
             this.StairTypology = StairTypology.HalfTurnStair;
             this.Transform = transform;
 
-            int riser_number = (int)Math.Ceiling(height / elementType.RiserHeight);
-            this.ActualRiserHeight = height / riser_number;
+            int riserNumber = (int)Math.Ceiling(height / elementType.RiserHeight);
+            this.ActualRiserHeight = height / riserNumber;
 
-            int firstRunRiserNumber = (int)Math.Ceiling((double)riser_number / 2);
-            int secondRunRiserNumber = riser_number - firstRunRiserNumber;
+            int flight1RiserNumber = (int)Math.Ceiling((double)riserNumber / 2);
+            int flight2RiserNumber = riserNumber - flight1RiserNumber;
 
-            Vector3 walkingline1Vector = direction.Normalized() * (firstRunRiserNumber * this.ElementType.TreadLength);
+            Vector3 walkingline1Vector = direction.Normalized() * (flight1RiserNumber * this.ElementType.TreadLength);
 
-            Line walkingline1 = new Line(
-                origin,
-                origin + walkingline1Vector
-                );
+            Line walkingline1 = new Line(origin,direction,flight1RiserNumber * this.ElementType.TreadLength);
 
             Vector3 walkingline2Origin = origin + walkingline1Vector + Vector3.ZAxis.Cross(direction.Normalized()) * (this.ElementType.FlightWidth + space);
-            Vector3 walkingline2Vector = direction.Normalized().Negated() * (secondRunRiserNumber * this.ElementType.TreadLength);
 
-            Line walkingline2 = new Line(
-                walkingline2Origin,
-                walkingline2Origin + walkingline2Vector
-                );
+            Line walkingline2 = new Line(walkingline2Origin,direction.Negated(),flight2RiserNumber * this.ElementType.TreadLength);
 
             this.WalkingLine = new Line[2] {
                 walkingline1,
@@ -232,12 +225,6 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
                 Floor landing = new Floor(landingPolygon, type, 0, landingHeightTansform, null);
                 this._landings.Add(landing);
             }
-
-
-
-
-
-
         }
     }
 
