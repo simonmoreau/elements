@@ -149,7 +149,7 @@ namespace Elements
             for (int i = 0; i < this.NumberOfRiser; i++)
             {
                 stairFlightPoints.Add(new Vector3(i * this.TreadLength + this.NosingLength, i * this.RiserHeight, 0));
-                stairFlightPoints.Add(new Vector3(i * this.TreadLength , (i + 1) * this.RiserHeight, 0));
+                stairFlightPoints.Add(new Vector3(i * this.TreadLength, (i + 1) * this.RiserHeight, 0));
             }
 
             // Last step
@@ -195,7 +195,7 @@ namespace Elements
             return this._landingThickness;
         }
 
-                private double _baseThickness;
+        private double _baseThickness;
         /// <summary>
         /// The thickness of the base surface of the stair, required to place the stair on a floor.
         /// </summary>
@@ -203,6 +203,34 @@ namespace Elements
         {
             return this._baseThickness;
         }
+
+        /// <summary>
+        /// The plane of the left string of the stair flight
+        /// </summary>
+        public Plane LeftPlane()
+        {
+            Plane leftPlane = new Plane(
+                new Vector3(0,0,- this.FlightWidth /2),
+                Vector3.ZAxis.Negated()
+            );
+
+            return this.Transform.OfPlane(leftPlane);
+        }
+
+                /// <summary>
+        /// The plane of the right string of the stair flight
+        /// </summary>
+        public Plane RightPlane()
+        {
+            Plane rightPlane = new Plane(
+                new Vector3(0,0,this.FlightWidth /2),
+                Vector3.ZAxis
+            );
+
+            return this.Transform.OfPlane(rightPlane);
+        }
+
+
 
 
 

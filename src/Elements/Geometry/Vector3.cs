@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -67,7 +66,15 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return new[] { this.ToArray() }.GetHashCode();
+            unchecked
+            {
+                int hash = 17;
+
+                hash = hash * 23 + this.X.GetHashCode();
+                hash = hash * 23 + this.Y.GetHashCode();
+                hash = hash * 23 + this.Z.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -533,57 +540,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Sort a collection of Vector3 around a central point.
-        /// </summary>
-        /// <param name="points">The collection of Vector3 to sort.</param>
-        /// <param name="center">The central point.</param>
-        /// <returns>A new sorted collection of Vector3</returns>
-        public static List<Vector3> SortClockwise(List<Vector3> points, Vector3 center)
-        {
-            center = new Vector3(center.X, center.Y, 0);
-            Transform transform = new Transform(center);
-            transform.Invert();
-            List<Vector3> transformedPoint = points.Select(p => transform.OfPoint(p)).ToList();
-            List<Vector3Polar> pointsPolar = transformedPoint.Select(p => CartesianToPolar(p)).ToList();
-            pointsPolar = pointsPolar.OrderBy(o => o.Angle).ToList();
-            transformedPoint = pointsPolar.Select(p => PolarToCartesian(p)).ToList();
-            transform.Invert();
-            transformedPoint = transformedPoint.Select(p => transform.OfPoint(p)).ToList();
-
-            return transformedPoint;
-
-        }
-
-        private static Vector3Polar CartesianToPolar(Vector3 point)
-        {
-            double x = point.X;
-            double y = point.Y;
-            double angle = Math.Atan2(y, x);
-            double radius = Math.Sqrt((x * x) + (y * y));
-
-            return new Vector3Polar(angle, radius);
-        }
-
-        private static Vector3 PolarToCartesian(Vector3Polar point)
-        {
-            double x = point.Radius * Math.Cos(point.Angle);
-            double y = point.Radius * Math.Sin(point.Angle);
-
-            return new Vector3(x, y, 0);
-        }
-
-        private struct Vector3Polar
-        {
-            public Vector3Polar(double angle, double radius)
-            {
-                this.Angle = angle;
-                this.Radius = radius;
-            }
-            public double Radius;
-            public double Angle;
-        }
-
-        /// <summary>
         /// Shrink a collection of Vector3 towards their average.
         /// </summary>
         /// <param name="points">The collection of Vector3 to shrink.</param>
@@ -619,35 +575,6 @@ namespace Elements.Geometry
                 c += 3;
             }
             return arr;
-        }
-    }
-
-    class Vector3EqualityComparer : IEqualityComparer<Vector3>
-    {
-        public bool Equals(Vector3 vector1, Vector3 vector2)
-        {
-            if (vector2 == null && vector1 == null)
-                return true;
-            else if (vector1 == null || vector2 == null)
-                return false;
-            else if (vector1.X == vector2.X && vector1.Y == vector2.Y
-                                && vector1.Z == vector2.Z)
-                return true;
-            else
-                return false;
-        }
-
-        public int GetHashCode(Vector3 vector)
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                // Suitable nullity checks etc, of course :)
-                hash = hash * 23 + vector.X.GetHashCode();
-                hash = hash * 23 + vector.Y.GetHashCode();
-                hash = hash * 23 + vector.Z.GetHashCode();
-                return hash;
-            }
         }
     }
 }
