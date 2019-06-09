@@ -35,7 +35,7 @@ namespace Elements.Tests
         {
             this.Name = "QuarterTurnStair";
 
-            Polygon square = Polygon.Rectangle(100, 100);
+            Polygon square = Polygon.Rectangle(30, 30,null,10,10);
             Floor floor = new Floor(square, new FloorType("floor", 0.1), -0.1, null, null);
             this.Model.AddElement(floor);
 
