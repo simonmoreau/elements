@@ -117,6 +117,42 @@ namespace Elements
             AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
         }
 
+                /// <summary>
+        /// Update an element existing in the model.
+        /// </summary>
+        /// <param name="element">The element to update in the model.</param>
+        /// <exception cref="System.ArgumentException">Thrown when no element 
+        /// with the same Id exists in the model.</exception>
+        public void UpdateElement(Element element)
+        {
+            if (element == null)
+            {
+                return;
+            }
+
+            if (this._elements.ContainsKey(element.Id))
+            {
+                // remove the previous element
+                this._elements.Remove(element.Id);
+                // Update the element itselft
+                this._elements.Add(element.Id, element);
+                // Update the root elements
+                GetRootLevelElementData(element);
+            }
+            else
+            {
+                throw new ArgumentException("No Element with this Id exists in the Model.");
+            }
+
+            if (element is IAggregateElements)
+            {
+                var agg = (IAggregateElements)element;
+                UpdateElements(agg.Elements);
+            }
+
+            AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
+        }
+
         /// <summary>
         /// Add a collection of elements to the model.
         /// </summary>
@@ -126,6 +162,18 @@ namespace Elements
             foreach (var e in elements)
             {
                 AddElement(e);
+            }
+        }
+
+                /// <summary>
+        /// Update a collection of elements in the model.
+        /// </summary>
+        /// <param name="elements">The elements to be updated in the model.</param>
+        public void UpdateElements(IEnumerable<Element> elements)
+        {
+            foreach (var e in elements)
+            {
+                UpdateElement(e);
             }
         }
 
