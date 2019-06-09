@@ -66,15 +66,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hash = 17;
-
-                hash = hash * 23 + this.X.GetHashCode();
-                hash = hash * 23 + this.Y.GetHashCode();
-                hash = hash * 23 + this.Z.GetHashCode();
-                return hash;
-            }
+            return this.ToString().GetHashCode();
         }
 
         /// <summary>

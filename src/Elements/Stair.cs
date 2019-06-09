@@ -212,7 +212,7 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
             else if (angleBetwenStairFlight <= 90)
             {
                 middleRight = topRight.ProjectAlong(stairFlight1.WalkingLine.Direction(), stairFlight2.RightPlane());
-                middleRight = topLeft.ProjectAlong(stairFlight1.WalkingLine.Direction(), stairFlight2.LeftPlane());
+                middleLeft = topLeft.ProjectAlong(stairFlight1.WalkingLine.Direction(), stairFlight2.LeftPlane());
                 middleLeft1 = middleLeft;
                 middleRight1 = middleRight;
             }
@@ -246,8 +246,10 @@ this.ElementType.WaistThickness, this.ElementType.FlightWidth, this.ElementType.
             landingPoints.Add(middleLeft);
             landingPoints.Add(middleLeft1);
             landingPoints.Add(topLeft);
+            IEnumerable<Vector3> landingPointsEnumerable = landingPoints.Select(p => new Vector3(p.X, p.Y, 0));
+            landingPointsEnumerable = landingPointsEnumerable.Distinct();
 
-            Polygon landingPolygon = new Polygon(landingPoints.Select(p => new Vector3(p.X, p.Y, 0)).Distinct().ToArray());
+            Polygon landingPolygon = new Polygon(landingPointsEnumerable.ToArray());
 
             Vector3 landingHeight = (stairFlight1.Height() - stairFlight1.LandingThickness()) * Vector3.ZAxis;
             Transform landingHeightTansform = new Transform(landingHeight);

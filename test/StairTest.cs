@@ -23,8 +23,6 @@ namespace Elements.Tests
             StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0, null);
             var Stair1 = new Stair(stairType, walkingLines, StairTypology.StraightRunStair, null);
 
-            var model = new Model();
-
             Assert.Equal(0.2, Stair1.ElementType.RiserHeight);
             Assert.Equal(0.3, Stair1.ElementType.TreadLength);
 
@@ -35,44 +33,60 @@ namespace Elements.Tests
         [Fact]
         public void QuarterTurnStair()
         {
-            Polygon square = Polygon.Rectangle(10, 10);
-            Floor floor = new Floor(square, new FloorType("floor", 0.1), -0.1, null, null);
-
             this.Name = "QuarterTurnStair";
+
+            Polygon square = Polygon.Rectangle(100, 100);
+            Floor floor = new Floor(square, new FloorType("floor", 0.1), -0.1, null, null);
+            this.Model.AddElement(floor);
+
+            Vector3[] directions = new Vector3[] {
+                new Vector3(1,-1,0).Normalized(),
+                new Vector3(1,0,0).Normalized(),
+                new Vector3(1,1,0).Normalized(),
+                new Vector3(-1,-1,0).Normalized(),
+                new Vector3(-1,0,0).Normalized(),
+                new Vector3(-1,1,0).Normalized(),
+            };
+
+            int i = 0;
+            foreach (Vector3 direction in directions)
+            {
+                Vector3 position = new Vector3(i * 4, 0, 0);
+                Stair stair1 = CreateQuarterTurnStair(direction, position, 0.5);
+
+                Assert.Equal(0.2, stair1.ElementType.RiserHeight);
+                Assert.Equal(0.3, stair1.ElementType.TreadLength);
+
+                position = new Vector3(i * 4, 6, 0);
+                Stair stair2 = CreateQuarterTurnStair(direction, position, 1);
+
+                this.Model.AddElement(stair1);
+                this.Model.AddElement(stair2);
+                i++;
+            }
+
+        }
+
+        private Stair CreateQuarterTurnStair(Vector3 direction, Vector3 position, double offset)
+        {
             StairType stairType = new StairType("test", 0.2, 0.3, 0.15, 1, 0.02, null);
 
+            Vector3 vector = new Vector3(0.5, 0, 0);
+            if (direction.X < 0) { vector = new Vector3(-0.5, 0, 0); }
+            Vector3 start = vector + offset * Vector3.ZAxis.Cross(direction).Normalized();
+            if (direction.X < 0) { start = vector + offset * Vector3.ZAxis.Cross(direction).Normalized().Negated(); }
+
             Line[] walkingLines1 = {
-                new Line(new Vector3(0, 0, 0),new Vector3(0, 3, 0)),
-                new Line(new Vector3(0.5, 3.5, 0),new Vector3(2.5, 3.5, 0))
+                new Line(new Vector3(0, -3, 0),new Vector3(0, 0, 0)),
+                new Line(start,direction,3 )
                 };
 
-            var Stair1 = new Stair(stairType, walkingLines1, StairTypology.QuarterTurnStair, null);
+            Transform transform = new Transform(position);
 
-StairType stairType2 = new StairType("test", 0.2, 0.3, 0.15, 2.4, 0.02, null);
-            Line[] walkingLines2 = {
-                new Line(new Vector3(4, 0, 0),new Vector3(4, 3, 0)),
-                new Line(new Vector3(6.6, 3, 0),new Vector3(6.6, 0, 0))
-                };
+            Stair stair = new Stair(stairType, walkingLines1, StairTypology.QuarterTurnStair, transform);
 
+            return stair;
 
-            var Stair2 = new Stair(stairType2, walkingLines2, StairTypology.QuarterTurnStair, null);
-
-            Line[] walkingLines3 = {
-                new Line(new Vector3(-3, 0, 0),new Vector3(-3, 3, 0)),
-                new Line(new Vector3(-6, 3, 0),new Vector3(-6,0, 0))
-                };
-
-            var Stair3 = new Stair(stairType, walkingLines3, StairTypology.QuarterTurnStair, null);
-
-            var model = new Model();
-
-            Assert.Equal(0.2, Stair1.ElementType.RiserHeight);
-            Assert.Equal(0.3, Stair1.ElementType.TreadLength);
-
-            this.Model.AddElement(Stair1);
-            this.Model.AddElement(Stair2);
-            this.Model.AddElement(Stair3);
-            this.Model.AddElement(floor);
         }
 
         [Fact]
